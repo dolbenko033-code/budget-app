@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Семейные финансы</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      --bg: var(--tg-theme-bg-color, #0f1115);
+      --card: var(--tg-theme-secondary-bg-color, #1a1e26);
+      --text: var(--tg-theme-text-color, #f4f6f8);
+      --hint: var(--tg-theme-hint-color, #8e98a8);
+      --accent: var(--tg-theme-button-color, #3b82f6);
+      --accent-text: var(--tg-theme-button-text-color, #ffffff);
+      --green: #22c55e;
+      --red: #ef4444;
+      --border: rgba(142, 152, 168, 0.16);
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body {
+      margin: 0;
+      padding: 14px 14px 86px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    /* Сводная карточка */
+    .summary-card {
+      background: linear-gradient(135deg, rgba(59,130,246,0.18), rgba(34,197,94,0.10));
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+    .summary-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: var(--hint);
+      margin-bottom: 6px;
+    }
+    .user-badge {
+      background: var(--card);
+      padding: 4px 10px;
+      border-radius: 99px;
+      font-size: 12px;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .total-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 4px 0 8px;
+    }
+    .total-amount {
+      font-size: 30px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+    .curr-toggle {
+      background: var(--accent);
+      color: var(--accent-text);
+      border: none;
+      border-radius: 10px;
+      padding: 6px 11px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .rate-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--hint);
+    }
+    .rate-refresh {
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-size: 12px;
+      cursor: pointer;
+      padding: 2px 6px;
+    }
+
+    /* Вкладки счетов */
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      background: var(--card);
+      padding: 5px;
+      border-radius: 14px;
+      margin-bottom: 12px;
+      border: 1px solid var(--border);
+    }
+    .tab-btn {
+      border: none;
+      background: transparent;
+      color: var(--hint);
+      padding: 9px 4px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .tab-btn.active {
+      background: var(--accent);
+      color: var(--accent-text);
+    }
+
+    /* Карточка выбранного счёта (параллельные валюты) */
+    .account-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .acc-byn {
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .acc-usd {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--green);
+      margin-top: 4px;
+    }
+    .acc-eq {
+      text-align: right;
+      font-size: 12px;
+      color: var(--hint);
+    }
+    .acc-eq strong {
+      display: block;
+      font-size: 14px;
+      color: var(--text);
+      margin-top: 2px;
+    }
+
+    /* Кнопки действий */
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .act-btn {
+      border: none;
+      border-radius: 14px;
+      padding: 12px 6px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      color: #fff;
+    }
+    .act-exp { background: #dc2626; }
+    .act-inc { background: #16a34a; }
+    .act-trf { background: #2563eb; }
+
+    /* Переключатель История / Статистика и фильтры */
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .pill-group {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .pill {
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--hint);
+      padding: 6px 11px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .pill.active {
+      background: var(--accent);
+      color: var(--accent-text);
+      border-color: var(--accent);
+    }
+
+    /* Список операций */
+    .date-header {
+      font-size: 12px;
+      color: var(--hint);
+      font-weight: 600;
+      margin: 12px 2px 6px;
+    }
+    .op-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 11px 12px;
+      margin-bottom: 7px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    .op-left { min-width: 0; flex: 1; }
+    .op-cat { font-size: 14px; font-weight: 600; }
+    .op-meta {
+      font-size: 12px;
+      color: var(--hint);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .op-right { text-align: right; display: flex; align-items: center; gap: 8px; }
+    .op-sum { font-size: 14px; font-weight: 700; white-space: nowrap; }
+    .sum-inc { color: var(--green); }
+    .sum-exp { color: var(--red); }
+    .sum-trf { color: var(--accent); }
+    .del-btn {
+      background: none;
+      border: none;
+      color: var(--hint);
+      font-size: 16px;
+      padding: 4px;
+      cursor: pointer;
+    }
+
+    /* Статистика */
+    .month-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 8px 12px;
+      margin-bottom: 12px;
+    }
+    .month-btn {
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 2px 10px;
+    }
+    .stat-row {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+    }
+    .stat-top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .bar-bg {
+      height: 7px;
+      background: rgba(142,152,168,0.18);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 99px;
+    }
+
+    /* Нижняя навигация */
+    .bottom-nav {
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding: 8px 14px 14px;
+      gap: 10px;
+    }
+    .nav-btn {
+      border: none;
+      background: transparent;
+      color: var(--hint);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 8px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .nav-btn.active {
+      background: rgba(59,130,246,0.16);
+      color: var(--accent);
+    }
+
+    /* Модальное окно ввода */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.62);
+      display: none;
+      align-items: flex-end;
+      z-index: 50;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      background: var(--bg);
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      border-radius: 22px 22px 0 0;
+      padding: 18px 16px 26px;
+      border-top: 1px solid var(--border);
+    }
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .modal-title { font-size: 18px; font-weight: 700; }
+    .close-btn {
+      background: var(--card);
+      border: none;
+      color: var(--text);
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .field-label {
+      font-size: 12px;
+      color: var(--hint);
+      margin: 10px 0 6px;
+      display: block;
+    }
+    .input-row {
+      display: flex;
+      gap: 8px;
+    }
+    input, select {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 16px;
+      outline: none;
+    }
+    .curr-switch {
+      display: flex;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 3px;
+      flex-shrink: 0;
+    }
+    .curr-opt {
+      border: none;
+      background: transparent;
+      color: var(--hint);
+      padding: 8px 14px;
+      border-radius: 9px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .curr-opt.active {
+      background: var(--accent);
+      color: var(--accent-text);
+    }
+    .cat-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 6px;
+    }
+    .cat-chip {
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .cat-chip.active {
+      background: var(--accent);
+      color: var(--accent-text);
+      border-color: var(--accent);
+    }
+    .save-btn {
+      width: 100%;
+      margin-top: 16px;
+      background: var(--accent);
+      color: var(--accent-text);
+      border: none;
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .save-btn:disabled { opacity: 0.55; }
+
+    .loader, .empty {
+      text-align: center;
+      color: var(--hint);
+      padding: 28px 10px;
+      font-size: 14px;
+    }
+    .toast {
+      position: fixed;
+      top: 14px; left: 50%;
+      transform: translateX(-50%);
+      background: #1f2937;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      z-index: 100;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div id="toast" class="toast"></div>
+
+<!-- Сводная карточка -->
+<div class="summary-card">
+  <div class="summary-top">
+    <span>Общий капитал (все счета)</span>
+    <span id="userBadge" class="user-badge">Загрузка...</span>
+  </div>
+  <div class="total-row">
+    <div id="totalAmount" class="total-amount">—</div>
+    <button id="summaryCurrBtn" class="curr-toggle" onclick="toggleSummaryCurrency()">BYN ⇄</button>
+  </div>
+  <div class="rate-row">
+    <span id="rateInfo">Курс USD: загрузка...</span>
+    <button class="rate-refresh" onclick="loadData(true)">↻ Обновить курс</button>
+  </div>
+</div>
+
+<!-- Вкладки счетов -->
+<div class="tabs" id="accountTabs">
+  <button class="tab-btn active" onclick="selectAccount('Основной')">Основной</button>
+  <button class="tab-btn" onclick="selectAccount('Копилка')">Копилка</button>
+  <button class="tab-btn" onclick="selectAccount('Подарочные')">Подарочные</button>
+</div>
+
+<!-- Параллельный баланс выбранного счёта -->
+<div class="account-card">
+  <div>
+    <div id="accByn" class="acc-byn">0.00 BYN</div>
+    <div id="accUsd" class="acc-usd">0.00 $</div>
+  </div>
+  <div class="acc-eq">
+    <span>Итого на счёте</span>
+    <strong id="accTotalEq">0.00 BYN</strong>
+  </div>
+</div>
+
+<!-- Быстрые действия -->
+<div class="actions">
+  <button class="act-btn act-exp" onclick="openModal('Расход')">− Расход</button>
+  <button class="act-btn act-inc" onclick="openModal('Доход')">+ Доход</button>
+  <button class="act-btn act-trf" onclick="openModal('Перевод')">⇄ Перевод</button>
+</div>
+
+<!-- Блок операций -->
+<div id="viewOps">
+  <div class="section-head">
+    <div class="pill-group" id="authorFilters"></div>
+    <button id="scopeBtn" class="pill" onclick="toggleScope()">Только этот счёт</button>
+  </div>
+  <div id="opsList"><div class="loader">Загружаем данные из таблицы...</div></div>
+</div>
+
+<!-- Блок статистики -->
+<div id="viewStats" style="display:none;">
+  <div class="month-bar">
+    <button class="month-btn" onclick="shiftMonth(-1)">‹</button>
+    <strong id="monthLabel"></strong>
+    <button class="month-btn" onclick="shiftMonth(1)">›</button>
+  </div>
+  <div class="section-head">
+    <div class="pill-group">
+      <button id="stExpBtn" class="pill active" onclick="setStatType('Расход')">Расходы</button>
+      <button id="stIncBtn" class="pill" onclick="setStatType('Доход')">Доходы</button>
+    </div>
+    <div class="pill-group" id="statAuthorFilters"></div>
+  </div>
+  <div id="statsList"></div>
+</div>
+
+<!-- Нижняя навигация -->
+<div class="bottom-nav">
+  <button id="navOps" class="nav-btn active" onclick="switchView('ops')">📋 Операции</button>
+  <button id="navStats" class="nav-btn" onclick="switchView('stats')">📊 Статистика</button>
+</div>
+
+<!-- Модальное окно добавления -->
+<div id="modalBackdrop" class="modal-backdrop" onclick="if(event.target===this) closeModal()">
+  <div class="modal">
+    <div class="modal-head">
+      <div id="modalTitle" class="modal-title">Новая операция</div>
+      <button class="close-btn" onclick="closeModal()">✕</button>
+    </div>
+
+    <!-- Переключатель режима для Перевода / Обмена -->
+    <div id="trfModeBox" style="display:none; margin-bottom:10px;">
+      <div class="pill-group">
+        <button id="modeTrfBtn" class="pill active" onclick="setTransferMode('Перевод')">Между счетами</button>
+        <button id="modeExchBtn" class="pill" onclick="setTransferMode('Обмен')">Обмен BYN ↔ $</button>
+      </div>
+    </div>
+
+    <label class="field-label" id="amountLabel">Сумма</label>
+    <div class="input-row">
+      <input id="opAmount" type="number" inputmode="decimal" step="0.01" placeholder="0.00" oninput="autoCalcExchange()">
+      <div class="curr-switch">
+        <button id="cByn" class="curr-opt active" onclick="setOpCurrency('BYN')">BYN</button>
+        <button id="cUsd" class="curr-opt" onclick="setOpCurrency('USD')">$</button>
+      </div>
+    </div>
+
+    <label class="field-label" id="accLabel">Счёт</label>
+    <select id="opAccount">
+      <option value="Основной">Основной</option>
+      <option value="Копилка">Копилка</option>
+      <option value="Подарочные">Подарочные</option>
+    </select>
+
+    <!-- Поля назначения (только для Перевода / Обмена) -->
+    <div id="toAccountBox" style="display:none;">
+      <label class="field-label">На счёт</label>
+      <select id="opToAccount">
+        <option value="Копилка">Копилка</option>
+        <option value="Основной">Основной</option>
+        <option value="Подарочные">Подарочные</option>
+      </select>
+    </div>
+
+    <div id="exchangeToBox" style="display:none;">
+      <label class="field-label">Получаем (<span id="toCurrLabel">$</span>)</label>
+      <input id="opToAmount" type="number" inputmode="decimal" step="0.01" placeholder="Авто по курсу">
+    </div>
+
+    <!-- Категории -->
+    <div id="categoryBox">
+      <label class="field-label">Категория</label>
+      <div id="catGrid" class="cat-grid"></div>
+    </div>
+
+    <label class="field-label">Комментарий (необязательно)</label>
+    <input id="opComment" type="text" placeholder="Например: Евроопт, подработка...">
+
+    <button id="saveBtn" class="save-btn" onclick="submitOperation()">Сохранить</button>
+  </div>
+</div>
+
+<script>
+  // ==================== ВСТАВЬ СЮДА ССЫЛКУ APPS SCRIPT ====================
+  const API_URL = 'https://script.google.com/macros/s/AKfycbyI0jUwIlFw1ElNp9AuikeZtXYsVqXyLvWY1XZh_R-G6ES3SOd0NvXCjyga8wOPqiDXeA/exec';
+  // ========================================================================
+
+  const tg = window.Telegram.WebApp;
+  tg.ready();
+  tg.expand();
+
+  let state = {
+    user: '',
+    users: ['Саша', 'Алина'],
+    balances: {
+      'Основной': { BYN: 0, USD: 0 },
+      'Копилка': { BYN: 0, USD: 0 },
+      'Подарочные': { BYN: 0, USD: 0 }
+    },
+    operations: [],
+    categories: { Доход: [], Расход: [] },
+    rate: { value: 3.30, source: '—', updated: '' },
+    activeAccount: 'Основной',
+    summaryCurrency: 'BYN', // BYN или USD
+    authorFilter: 'Все',
+    onlyCurrentAccount: true,
+    view: 'ops',
+    statType: 'Расход',
+    statMonth: new Date()
+  };
+
+  let modalState = {
+    type: 'Расход',
+    currency: 'BYN',
+    category: ''
+  };
+
+  function esc(str) {
+    return String(str || '').replace(/[&<>"']/g, m => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[m]));
+  }
+
+  function fmt(num) {
+    return Number(num || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  }
+
+  function showToast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.style.display = 'block';
+    setTimeout(() => { el.style.display = 'none'; }, 2400);
+  }
+
+  async function apiCall(payload) {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ ...payload, initData: tg.initData })
+    });
+    return res.json();
+  }
+
+  async function loadData(forceRate = false) {
+    try {
+      const data = await apiCall({ appAction: 'getData', forceRate });
+      if (!data.ok) {
+        document.getElementById('opsList').innerHTML = `<div class="empty">⚠️ ${esc(data.error)}</div>`;
+        return;
+      }
+      state.user = data.user;
+      state.users = data.users;
+      state.balances = data.balances;
+      state.operations = data.operations;
+      state.categories = data.categories;
+      state.rate = data.rate;
+      renderAll();
+      if (forceRate) showToast('Курс обновлён');
+    } catch (e) {
+      document.getElementById('opsList').innerHTML = '<div class="empty">Ошибка связи с Google Таблицей. Проверьте API_URL.</div>';
+    }
+  }
+
+  function toggleSummaryCurrency() {
+    state.summaryCurrency = state.summaryCurrency === 'BYN' ? 'USD' : 'BYN';
+    if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+    renderHeaderAndAccount();
+    if (state.view === 'stats') renderStats();
+  }
+
+  function selectAccount(acc) {
+    state.activeAccount = acc;
+    document.querySelectorAll('#accountTabs .tab-btn').forEach(b => {
+      b.classList.toggle('active', b.textContent === acc);
+    });
+    if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+    renderHeaderAndAccount();
+    renderOperations();
+  }
+
+  function toggleScope() {
+    state.onlyCurrentAccount = !state.onlyCurrentAccount;
+    renderOperations();
+  }
+
+  function setAuthorFilter(name) {
+    state.authorFilter = name;
+    renderAuthorPills();
+    renderOperations();
+    renderStats();
+  }
+
+  function switchView(v) {
+    state.view = v;
+    document.getElementById('viewOps').style.display = v === 'ops' ? 'block' : 'none';
+    document.getElementById('viewStats').style.display = v === 'stats' ? 'block' : 'none';
+    document.getElementById('navOps').classList.toggle('active', v === 'ops');
+    document.getElementById('navStats').classList.toggle('active', v === 'stats');
+    if (v === 'stats') renderStats();
+  }
+
+  function renderAll() {
+    document.getElementById('userBadge').textContent = state.user || 'Вы';
+    renderHeaderAndAccount();
+    renderAuthorPills();
+    renderOperations();
+    if (state.view === 'stats') renderStats();
+  }
+
+  function renderHeaderAndAccount() {
+    const rate = state.rate.value || 3.30;
+    let totalByn = 0;
+    Object.values(state.balances).forEach(b => {
+      totalByn += (b.BYN || 0) + (b.USD || 0) * rate;
+    });
+
+    const isUsd = state.summaryCurrency === 'USD';
+    const shownTotal = isUsd ? (totalByn / rate) : totalByn;
+    document.getElementById('totalAmount').textContent = fmt(shownTotal);
+    document.getElementById('summaryCurrBtn').textContent = isUsd ? '$ ⇄' : 'BYN ⇄';
+    document.getElementById('rateInfo').textContent =
+      `1 $ = ${rate.toFixed(4).replace(/0+$/, '').replace(/\.$/, '')} BYN · ${state.rate.source}`;
+
+    const acc = state.balances[state.activeAccount] || { BYN: 0, USD: 0 };
+    document.getElementById('accByn').textContent = `${fmt(acc.BYN)} BYN`;
+    document.getElementById('accUsd').textContent = `${fmt(acc.USD)} $`;
+
+    const accTotalByn = acc.BYN + acc.USD * rate;
+    const accEq = isUsd ? `${fmt(accTotalByn / rate)} $` : `${fmt(accTotalByn)} BYN`;
+    document.getElementById('accTotalEq').textContent = `≈ ${accEq}`;
+  }
+
+  function renderAuthorPills() {
+    const list = ['Все', ...state.users];
+    const html = list.map(u =>
+      `<button class="pill ${state.authorFilter === u ? 'active' : ''}" onclick="setAuthorFilter('${esc(u)}')">${esc(u)}</button>`
+    ).join('');
+    document.getElementById('authorFilters').innerHTML = html;
+    document.getElementById('statAuthorFilters').innerHTML = html;
+  }
+
+  function renderOperations() {
+    const scopeBtn = document.getElementById('scopeBtn');
+    scopeBtn.textContent = state.onlyCurrentAccount ? `Счёт: ${state.activeAccount}` : 'Все счета';
+    scopeBtn.classList.toggle('active', state.onlyCurrentAccount);
+
+    const filtered = state.operations.filter(op => {
+      if (state.authorFilter !== 'Все' && op.author !== state.authorFilter) return false;
+      if (state.onlyCurrentAccount && op.account !== state.activeAccount && op.toAccount !== state.activeAccount) return false;
+      return true;
+    });
+
+    const container = document.getElementById('opsList');
+    if (!filtered.length) {
+      container.innerHTML = '<div class="empty">Операций пока нет</div>';
+      return;
+    }
+
+    let html = '';
+    let lastDay = '';
+
+    filtered.forEach(op => {
+      const day = op.date.slice(0, 10);
+      if (day !== lastDay) {
+        lastDay = day;
+        html += `<div class="date-header">${formatDayLabel(day)}</div>`;
+      }
+
+      const curr = op.currency === 'USD' ? '$' : 'BYN';
+      let sumHtml = '';
+      let title = op.category;
+      let sub = `${op.author} · ${op.account}`;
+
+      if (op.type === 'Доход') {
+        sumHtml = `<div class="op-sum sum-inc">+${fmt(op.amount)} ${curr}</div>`;
+      } else if (op.type === 'Расход') {
+        sumHtml = `<div class="op-sum sum-exp">−${fmt(op.amount)} ${curr}</div>`;
+      } else if (op.type === 'Перевод') {
+        title = `${op.account} → ${op.toAccount}`;
+        sub = `${op.author} · Перевод`;
+        sumHtml = `<div class="op-sum sum-trf">${fmt(op.amount)} ${curr}</div>`;
+      } else if (op.type === 'Обмен') {
+        const toCurr = op.toCurrency === 'USD' ? '$' : 'BYN';
+        title = `Обмен (${op.account})`;
+        sub = `${op.author} · ${fmt(op.amount)} ${curr} → ${fmt(op.toAmount)} ${toCurr}`;
+        sumHtml = `<div class="op-sum sum-trf">+${fmt(op.toAmount)} ${toCurr}</div>`;
+      }
+
+      if (op.comment) sub += ` · ${op.comment}`;
+
+      html += `
+        <div class="op-item">
+          <div class="op-left">
+            <div class="op-cat">${esc(title)}</div>
+            <div class="op-meta">${esc(sub)}</div>
+          </div>
+          <div class="op-right">
+            ${sumHtml}
+            <button class="del-btn" onclick="deleteOp('${esc(op.id)}')" title="Удалить">🗑</button>
+          </div>
+        </div>
+      `;
+    });
+
+    container.innerHTML = html;
+  }
+
+  function formatDayLabel(isoDay) {
+    const parts = isoDay.split('-');
+    if (parts.length !== 3) return isoDay;
+    const months = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
+    return `${parseInt(parts[2], 10)} ${months[parseInt(parts[1], 10) - 1]} ${parts[0]}`;
+  }
+
+  // --- СТАТИСТИКА ---
+  function shiftMonth(delta) {
+    state.statMonth = new Date(state.statMonth.getFullYear(), state.statMonth.getMonth() + delta, 1);
+    renderStats();
+  }
+
+  function setStatType(t) {
+    state.statType = t;
+    document.getElementById('stExpBtn').classList.toggle('active', t === 'Расход');
+    document.getElementById('stIncBtn').classList.toggle('active', t === 'Доход');
+    renderStats();
+  }
+
+  function renderStats() {
+    const y = state.statMonth.getFullYear();
+    const m = state.statMonth.getMonth();
+    const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+    document.getElementById('monthLabel').textContent = `${monthNames[m]} ${y}`;
+
+    const prefix = `${y}-${String(m + 1).padStart(2, '0')}`;
+    const rate = state.rate.value || 3.30;
+    const isUsd = state.summaryCurrency === 'USD';
+    const currLabel = isUsd ? '$' : 'BYN';
+
+    const byCat = {};
+    let totalByn = 0;
+
+    state.operations.forEach(op => {
+      if (op.type !== state.statType) return;
+      if (!op.date.startsWith(prefix)) return;
+      if (state.authorFilter !== 'Все' && op.author !== state.authorFilter) return;
+
+      const valByn = op.currency === 'USD' ? op.amount * rate : op.amount;
+      byCat[op.category] = (byCat[op.category] || 0) + valByn;
+      totalByn += valByn;
+    });
+
+    const container = document.getElementById('statsList');
+    const entries = Object.entries(byCat).sort((a, b) => b[1] - a[1]);
+
+    if (!entries.length) {
+      container.innerHTML = '<div class="empty">За этот месяц записей нет</div>';
+      return;
+    }
+
+    const totalShown = isUsd ? totalByn / rate : totalByn;
+    let html = `<div style="margin-bottom:10px; font-size:14px; color:var(--hint);">Всего (${state.statType.toLowerCase()}): <strong style="color:var(--text);">${fmt(totalShown)} ${currLabel}</strong></div>`;
+
+    entries.forEach(([cat, valByn]) => {
+      const pct = Math.round((valByn / totalByn) * 100);
+      const shown = isUsd ? valByn / rate : valByn;
+      html += `
+        <div class="stat-row">
+          <div class="stat-top">
+            <span>${esc(cat)} (${pct}%)</span>
+            <span>${fmt(shown)} ${currLabel}</span>
+          </div>
+          <div class="bar-bg"><div class="bar-fill" style="width:${pct}%"></div></div>
+        </div>
+      `;
+    });
+
+    container.innerHTML = html;
+  }
+
+  // --- МОДАЛЬНОЕ ОКНО ДОБАВЛЕНИЯ ---
+  function openModal(type) {
+    modalState.type = type;
+    modalState.currency = 'BYN';
+    document.getElementById('opAmount').value = '';
+    document.getElementById('opToAmount').value = '';
+    document.getElementById('opComment').value = '';
+    document.getElementById('opAccount').value = state.activeAccount;
+
+    // Для перевода подбираем другой счёт по умолчанию
+    const otherAcc = state.activeAccount === 'Копилка' ? 'Основной' : 'Копилка';
+    document.getElementById('opToAccount').value = otherAcc;
+
+    setOpCurrency('BYN');
+    updateModalLayout();
+    document.getElementById('modalBackdrop').classList.add('open');
+    setTimeout(() => document.getElementById('opAmount').focus(), 100);
+  }
+
+  function closeModal() {
+    document.getElementById('modalBackdrop').classList.remove('open');
+  }
+
+  function setTransferMode(mode) {
+    modalState.type = mode;
+    updateModalLayout();
+  }
+
+  function setOpCurrency(c) {
+    modalState.currency = c;
+    document.getElementById('cByn').classList.toggle('active', c === 'BYN');
+    document.getElementById('cUsd').classList.toggle('active', c === 'USD');
+    document.getElementById('toCurrLabel').textContent = c === 'BYN' ? '$' : 'BYN';
+    autoCalcExchange();
+  }
+
+  function autoCalcExchange() {
+    if (modalState.type !== 'Обмен') return;
+    const val = parseFloat(document.getElementById('opAmount').value);
+    if (!val || val <= 0) {
+      document.getElementById('opToAmount').value = '';
+      return;
+    }
+    const rate = state.rate.value || 3.30;
+    const converted = modalState.currency === 'BYN' ? (val / rate) : (val * rate);
+    document.getElementById('opToAmount').value = converted.toFixed(2);
+  }
+
+  function updateModalLayout() {
+    const t = modalState.type;
+    const isTrfOrExch = t === 'Перевод' || t === 'Обмен';
+
+    document.getElementById('modalTitle').textContent =
+      t === 'Расход' ? 'Новый расход' :
+      t === 'Доход' ? 'Новый доход' :
+      t === 'Перевод' ? 'Перевод между счетами' : 'Обмен валют';
+
+    document.getElementById('trfModeBox').style.display = isTrfOrExch ? 'block' : 'none';
+    document.getElementById('modeTrfBtn').classList.toggle('active', t === 'Перевод');
+    document.getElementById('modeExchBtn').classList.toggle('active', t === 'Обмен');
+
+    document.getElementById('accLabel').textContent = t === 'Перевод' ? 'Со счёта' : 'Счёт';
+    document.getElementById('amountLabel').textContent = t === 'Обмен' ? 'Отдаём' : 'Сумма';
+    document.getElementById('toAccountBox').style.display = t === 'Перевод' ? 'block' : 'none';
+    document.getElementById('exchangeToBox').style.display = t === 'Обмен' ? 'block' : 'none';
+    document.getElementById('categoryBox').style.display = isTrfOrExch ? 'none' : 'block';
+
+    if (!isTrfOrExch) {
+      const list = state.categories[t] || [];
+      modalState.category = list.length ? list[0].name : 'Прочее';
+      renderCategoryChips(list);
+    }
+  }
+
+  function renderCategoryChips(list) {
+    document.getElementById('catGrid').innerHTML = list.map(c =>
+      `<button class="cat-chip ${modalState.category === c.name ? 'active' : ''}" onclick="pickCategory('${esc(c.name)}')">${esc(c.name)}</button>`
+    ).join('');
+  }
+
+  function pickCategory(name) {
+    modalState.category = name;
+    document.querySelectorAll('#catGrid .cat-chip').forEach(b => {
+      b.classList.toggle('active', b.textContent === name);
+    });
+  }
+
+  async function submitOperation() {
+    const amount = parseFloat(document.getElementById('opAmount').value);
+    if (!amount || amount <= 0) {
+      showToast('Введите сумму');
+      return;
+    }
+
+    const account = document.getElementById('opAccount').value;
+    const comment = document.getElementById('opComment').value.trim();
+
+    const op = {
+      type: modalState.type,
+      account,
+      currency: modalState.currency,
+      amount,
+      category: modalState.category,
+      comment
+    };
+
+    if (modalState.type === 'Перевод') {
+      const toAccount = document.getElementById('opToAccount').value;
+      if (toAccount === account) {
+        showToast('Выберите разные счета для перевода');
+        return;
+      }
+      op.toAccount = toAccount;
+      op.toAmount = amount;
+      op.toCurrency = modalState.currency;
+    } else if (modalState.type === 'Обмен') {
+      const toAmount = parseFloat(document.getElementById('opToAmount').value);
+      if (!toAmount || toAmount <= 0) {
+        showToast('Укажите сумму получения');
+        return;
+      }
+      op.toAccount = account;
+      op.toAmount = toAmount;
+      op.toCurrency = modalState.currency === 'BYN' ? 'USD' : 'BYN';
+    }
+
+    const btn = document.getElementById('saveBtn');
+    btn.disabled = true;
+    btn.textContent = 'Сохраняем...';
+
+    try {
+      const res = await apiCall({ appAction: 'addOp', op });
+      if (res.ok) {
+        state.balances = res.balances;
+        state.operations = res.operations;
+        closeModal();
+        renderAll();
+        if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+        showToast('Сохранено');
+      } else {
+        showToast(res.error || 'Ошибка сохранения');
+      }
+    } catch (e) {
+      showToast('Ошибка сети');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Сохранить';
+    }
+  }
+
+  async function deleteOp(id) {
+    if (!confirm('Удалить эту операцию?')) return;
+    try {
+      const res = await apiCall({ appAction: 'deleteOp', id });
+      if (res.ok) {
+        state.balances = res.balances;
+        state.operations = res.operations;
+        renderAll();
+        showToast('Удалено');
+      }
+    } catch (e) {
+      showToast('Не удалось удалить');
+    }
+  }
+
+  loadData();
+</script>
+</body>
+</html>
