@@ -15,19 +15,19 @@
       --accent-text: var(--tg-theme-button-text-color, #ffffff);
       --green: #22c55e;
       --red: #ef4444;
+      --orange: #f59e0b;
       --border: rgba(142, 152, 168, 0.16);
     }
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body {
       margin: 0;
-      padding: 14px 14px 86px;
+      padding: 14px 14px 92px;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: var(--bg);
       color: var(--text);
     }
 
-    /* Сводная карточка */
     .summary-card {
       background: linear-gradient(135deg, rgba(59,130,246,0.18), rgba(34,197,94,0.10));
       border: 1px solid var(--border);
@@ -42,7 +42,10 @@
       font-size: 13px;
       color: var(--hint);
       margin-bottom: 6px;
+      gap: 8px;
     }
+    .top-badges { display: flex; align-items: center; gap: 6px; }
+    .sync-tag { font-size: 11px; color: var(--accent); display: none; }
     .user-badge {
       background: var(--card);
       padding: 4px 10px;
@@ -57,11 +60,7 @@
       gap: 10px;
       margin: 4px 0 8px;
     }
-    .total-amount {
-      font-size: 30px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-    }
+    .total-amount { font-size: 30px; font-weight: 700; letter-spacing: -0.5px; }
     .curr-toggle {
       background: var(--accent);
       color: var(--accent-text);
@@ -88,7 +87,6 @@
       padding: 2px 6px;
     }
 
-    /* Вкладки счетов */
     .tabs {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -108,14 +106,9 @@
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
-      transition: 0.15s;
     }
-    .tab-btn.active {
-      background: var(--accent);
-      color: var(--accent-text);
-    }
+    .tab-btn.active { background: var(--accent); color: var(--accent-text); }
 
-    /* Карточка выбранного счёта (параллельные валюты) */
     .account-card {
       background: var(--card);
       border: 1px solid var(--border);
@@ -126,35 +119,83 @@
       justify-content: space-between;
       align-items: center;
     }
-    .acc-byn {
-      font-size: 24px;
+    .acc-byn { font-size: 24px; font-weight: 700; line-height: 1.2; }
+    .acc-usd { font-size: 16px; font-weight: 600; color: var(--green); margin-top: 4px; }
+    .acc-eq { text-align: right; font-size: 12px; color: var(--hint); }
+    .acc-eq strong { display: block; font-size: 14px; color: var(--text); margin-top: 2px; }
+
+    /* Цели в Копилке */
+    .goals-box { margin-bottom: 14px; }
+    .goals-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .goals-head span { font-size: 13px; font-weight: 700; color: var(--hint); }
+    .small-add-btn {
+      background: rgba(59,130,246,0.16);
+      color: var(--accent);
+      border: none;
+      border-radius: 8px;
+      padding: 5px 10px;
+      font-size: 12px;
       font-weight: 700;
-      line-height: 1.2;
+      cursor: pointer;
     }
-    .acc-usd {
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--green);
-      margin-top: 4px;
+    .goal-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 8px;
     }
-    .acc-eq {
-      text-align: right;
+    .goal-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .goal-title { font-size: 14px; font-weight: 700; }
+    .goal-nums {
       font-size: 12px;
       color: var(--hint);
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
     }
-    .acc-eq strong {
-      display: block;
-      font-size: 14px;
+    .goal-bar-bg {
+      height: 8px;
+      background: rgba(142,152,168,0.18);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .goal-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6, #22c55e);
+      border-radius: 99px;
+      transition: width 0.25s;
+    }
+    .goal-actions { display: flex; gap: 6px; }
+    .icon-btn {
+      background: rgba(142,152,168,0.14);
+      border: none;
       color: var(--text);
-      margin-top: 2px;
+      border-radius: 8px;
+      padding: 5px 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
     }
+    .icon-btn.green { background: rgba(34,197,94,0.18); color: var(--green); }
+    .icon-btn.red { background: rgba(239,68,68,0.14); color: var(--red); }
 
-    /* Кнопки действий */
     .actions {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       gap: 8px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
     .act-btn {
       border: none;
@@ -169,7 +210,41 @@
     .act-inc { background: #16a34a; }
     .act-trf { background: #2563eb; }
 
-    /* Переключатель История / Статистика и фильтры */
+    /* Поиск */
+    .search-wrap { position: relative; margin-bottom: 10px; }
+    .search-input {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px 36px 10px 12px;
+      font-size: 14px;
+      outline: none;
+    }
+    .search-clear {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--hint);
+      font-size: 16px;
+      cursor: pointer;
+      display: none;
+      padding: 4px;
+    }
+    .search-summary {
+      background: rgba(59,130,246,0.12);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 11px;
+      font-size: 12px;
+      margin-bottom: 10px;
+      display: none;
+    }
+
     .section-head {
       display: flex;
       justify-content: space-between;
@@ -178,11 +253,7 @@
       gap: 8px;
       flex-wrap: wrap;
     }
-    .pill-group {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
+    .pill-group { display: flex; gap: 6px; flex-wrap: wrap; }
     .pill {
       border: 1px solid var(--border);
       background: var(--card);
@@ -199,7 +270,6 @@
       border-color: var(--accent);
     }
 
-    /* Список операций */
     .date-header {
       font-size: 12px;
       color: var(--hint);
@@ -215,7 +285,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
     .op-left { min-width: 0; flex: 1; }
     .op-cat { font-size: 14px; font-weight: 600; }
@@ -227,17 +297,111 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    .op-right { text-align: right; display: flex; align-items: center; gap: 8px; }
-    .op-sum { font-size: 14px; font-weight: 700; white-space: nowrap; }
+    .op-right { text-align: right; display: flex; align-items: center; gap: 5px; }
+    .op-sum { font-size: 14px; font-weight: 700; white-space: nowrap; margin-right: 2px; }
     .sum-inc { color: var(--green); }
     .sum-exp { color: var(--red); }
     .sum-trf { color: var(--accent); }
-    .del-btn {
+    .op-act-btn {
       background: none;
       border: none;
       color: var(--hint);
-      font-size: 16px;
+      font-size: 15px;
       padding: 4px;
+      cursor: pointer;
+    }
+
+    /* Обязательные траты */
+    .add-rem-btn {
+      width: 100%;
+      background: var(--accent);
+      color: var(--accent-text);
+      border: none;
+      border-radius: 14px;
+      padding: 13px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+    .rem-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 13px;
+      margin-bottom: 10px;
+    }
+    .rem-card.due {
+      border-color: rgba(245, 158, 11, 0.55);
+      background: linear-gradient(135deg, rgba(245,158,11,0.10), transparent);
+    }
+    .rem-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .rem-title { font-size: 15px; font-weight: 700; }
+    .rem-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 99px;
+      white-space: nowrap;
+    }
+    .badge-due { background: rgba(245,158,11,0.2); color: var(--orange); }
+    .badge-wait { background: rgba(142,152,168,0.16); color: var(--hint); }
+    .badge-done { background: rgba(34,197,94,0.18); color: var(--green); }
+    .rem-meta {
+      font-size: 12px;
+      color: var(--hint);
+      margin-top: 6px;
+      line-height: 1.45;
+    }
+    .rem-actions {
+      display: flex;
+      gap: 7px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    .rem-btn-done {
+      flex: 1;
+      background: #16a34a;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 9px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .rem-btn-pay {
+      flex: 1;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 9px 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .rem-btn-edit {
+      background: rgba(142,152,168,0.18);
+      color: var(--text);
+      border: none;
+      border-radius: 10px;
+      padding: 9px 11px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .rem-btn-del {
+      background: rgba(239,68,68,0.14);
+      color: var(--red);
+      border: none;
+      border-radius: 10px;
+      padding: 9px 11px;
+      font-size: 13px;
       cursor: pointer;
     }
 
@@ -250,7 +414,7 @@
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 8px 12px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     .month-btn {
       background: none;
@@ -261,6 +425,21 @@
       cursor: pointer;
       padding: 2px 10px;
     }
+    .stat-kpis {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;
+      margin-bottom: 12px;
+    }
+    .kpi-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 9px 8px;
+      text-align: center;
+    }
+    .kpi-label { font-size: 11px; color: var(--hint); }
+    .kpi-val { font-size: 13px; font-weight: 700; margin-top: 3px; }
     .stat-row {
       background: var(--card);
       border: 1px solid var(--border);
@@ -281,11 +460,7 @@
       border-radius: 99px;
       overflow: hidden;
     }
-    .bar-fill {
-      height: 100%;
-      background: var(--accent);
-      border-radius: 99px;
-    }
+    .bar-fill { height: 100%; background: var(--accent); border-radius: 99px; }
 
     /* Нижняя навигация */
     .bottom-nav {
@@ -294,26 +469,42 @@
       background: var(--card);
       border-top: 1px solid var(--border);
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      padding: 8px 14px 14px;
-      gap: 10px;
+      grid-template-columns: repeat(3, 1fr);
+      padding: 7px 10px 13px;
+      gap: 6px;
+      z-index: 20;
     }
     .nav-btn {
       border: none;
       background: transparent;
       color: var(--hint);
-      font-size: 13px;
+      font-size: 11px;
       font-weight: 700;
-      padding: 8px;
+      padding: 6px 4px;
       border-radius: 10px;
       cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      position: relative;
     }
-    .nav-btn.active {
-      background: rgba(59,130,246,0.16);
-      color: var(--accent);
+    .nav-btn .ico { font-size: 17px; line-height: 1; }
+    .nav-btn.active { background: rgba(59,130,246,0.16); color: var(--accent); }
+    .nav-dot {
+      position: absolute;
+      top: 4px;
+      right: 18%;
+      background: var(--orange);
+      color: #000;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 1px 5px;
+      border-radius: 99px;
+      display: none;
     }
 
-    /* Модальное окно ввода */
+    /* Модальные окна */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -326,7 +517,7 @@
     .modal {
       background: var(--bg);
       width: 100%;
-      max-height: 90vh;
+      max-height: 92vh;
       overflow-y: auto;
       border-radius: 22px 22px 0 0;
       padding: 18px 16px 26px;
@@ -354,10 +545,7 @@
       margin: 10px 0 6px;
       display: block;
     }
-    .input-row {
-      display: flex;
-      gap: 8px;
-    }
+    .input-row { display: flex; gap: 8px; }
     input, select {
       width: 100%;
       background: var(--card);
@@ -365,8 +553,26 @@
       color: var(--text);
       border-radius: 12px;
       padding: 12px;
-      font-size: 16px;
+      font-size: 15px;
       outline: none;
+    }
+    .check-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 12px;
+      background: var(--card);
+      padding: 11px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+    .check-row input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      margin-top: 1px;
     }
     .curr-switch {
       display: flex;
@@ -385,16 +591,8 @@
       font-weight: 700;
       cursor: pointer;
     }
-    .curr-opt.active {
-      background: var(--accent);
-      color: var(--accent-text);
-    }
-    .cat-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px;
-      margin-top: 6px;
-    }
+    .curr-opt.active { background: var(--accent); color: var(--accent-text); }
+    .cat-grid { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 6px; }
     .cat-chip {
       border: 1px solid var(--border);
       background: var(--card);
@@ -404,11 +602,7 @@
       font-size: 13px;
       cursor: pointer;
     }
-    .cat-chip.active {
-      background: var(--accent);
-      color: var(--accent-text);
-      border-color: var(--accent);
-    }
+    .cat-chip.active { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
     .save-btn {
       width: 100%;
       margin-top: 16px;
@@ -426,7 +620,7 @@
     .loader, .empty {
       text-align: center;
       color: var(--hint);
-      padding: 28px 10px;
+      padding: 24px 10px;
       font-size: 14px;
     }
     .toast {
@@ -441,6 +635,8 @@
       font-weight: 600;
       z-index: 100;
       display: none;
+      max-width: 90%;
+      text-align: center;
     }
   </style>
 </head>
@@ -452,7 +648,10 @@
 <div class="summary-card">
   <div class="summary-top">
     <span>Общий капитал (все счета)</span>
-    <span id="userBadge" class="user-badge">Загрузка...</span>
+    <div class="top-badges">
+      <span id="syncTag" class="sync-tag">↻ Синхр...</span>
+      <span id="userBadge" class="user-badge">Загрузка...</span>
+    </div>
   </div>
   <div class="total-row">
     <div id="totalAmount" class="total-amount">—</div>
@@ -464,34 +663,47 @@
   </div>
 </div>
 
-<!-- Вкладки счетов -->
-<div class="tabs" id="accountTabs">
-  <button class="tab-btn active" onclick="selectAccount('Основной')">Основной</button>
-  <button class="tab-btn" onclick="selectAccount('Копилка')">Копилка</button>
-  <button class="tab-btn" onclick="selectAccount('Подарочные')">Подарочные</button>
-</div>
-
-<!-- Параллельный баланс выбранного счёта -->
-<div class="account-card">
-  <div>
-    <div id="accByn" class="acc-byn">0.00 BYN</div>
-    <div id="accUsd" class="acc-usd">0.00 $</div>
-  </div>
-  <div class="acc-eq">
-    <span>Итого на счёте</span>
-    <strong id="accTotalEq">0.00 BYN</strong>
-  </div>
-</div>
-
-<!-- Быстрые действия -->
-<div class="actions">
-  <button class="act-btn act-exp" onclick="openModal('Расход')">− Расход</button>
-  <button class="act-btn act-inc" onclick="openModal('Доход')">+ Доход</button>
-  <button class="act-btn act-trf" onclick="openModal('Перевод')">⇄ Перевод</button>
-</div>
-
-<!-- Блок операций -->
+<!-- Блок Операций -->
 <div id="viewOps">
+  <div class="tabs" id="accountTabs">
+    <button class="tab-btn active" onclick="selectAccount('Основной')">Основной</button>
+    <button class="tab-btn" onclick="selectAccount('Копилка')">Копилка</button>
+    <button class="tab-btn" onclick="selectAccount('Подарочные')">Подарочные</button>
+  </div>
+
+  <div class="account-card">
+    <div>
+      <div id="accByn" class="acc-byn">0.00 BYN</div>
+      <div id="accUsd" class="acc-usd">0.00 $</div>
+    </div>
+    <div class="acc-eq">
+      <span>Итого на счёте</span>
+      <strong id="accTotalEq">0.00 BYN</strong>
+    </div>
+  </div>
+
+  <!-- Цели в Копилке -->
+  <div id="goalsBox" class="goals-box" style="display:none;">
+    <div class="goals-head">
+      <span>🎯 Цели в Копилке</span>
+      <button class="small-add-btn" onclick="openGoalModal()">+ Цель</button>
+    </div>
+    <div id="goalsList"></div>
+  </div>
+
+  <div class="actions">
+    <button class="act-btn act-exp" onclick="openModal('Расход')">− Расход</button>
+    <button class="act-btn act-inc" onclick="openModal('Доход')">+ Доход</button>
+    <button class="act-btn act-trf" onclick="openModal('Перевод')">⇄ Перевод</button>
+  </div>
+
+  <!-- Поиск по истории -->
+  <div class="search-wrap">
+    <input id="searchInput" class="search-input" type="text" placeholder="🔍 Поиск: евроопт, ремонт, корм, 100..." oninput="onSearchInput()">
+    <button id="searchClear" class="search-clear" onclick="clearSearch()">✕</button>
+  </div>
+  <div id="searchSummary" class="search-summary"></div>
+
   <div class="section-head">
     <div class="pill-group" id="authorFilters"></div>
     <button id="scopeBtn" class="pill" onclick="toggleScope()">Только этот счёт</button>
@@ -499,13 +711,26 @@
   <div id="opsList"><div class="loader">Загружаем данные из таблицы...</div></div>
 </div>
 
-<!-- Блок статистики -->
+<!-- Блок Обязательных трат -->
+<div id="viewReminders" style="display:none;">
+  <button class="add-rem-btn" onclick="openRemModal()">+ Добавить обязательную трату</button>
+  <div class="section-head">
+    <div class="pill-group">
+      <button id="remFilterAct" class="pill active" onclick="setRemFilter('Активно')">Активные</button>
+      <button id="remFilterDone" class="pill" onclick="setRemFilter('Выполнено')">Выполненные</button>
+    </div>
+  </div>
+  <div id="remList"></div>
+</div>
+
+<!-- Блок Статистики -->
 <div id="viewStats" style="display:none;">
   <div class="month-bar">
     <button class="month-btn" onclick="shiftMonth(-1)">‹</button>
     <strong id="monthLabel"></strong>
     <button class="month-btn" onclick="shiftMonth(1)">›</button>
   </div>
+  <div id="statKpis" class="stat-kpis"></div>
   <div class="section-head">
     <div class="pill-group">
       <button id="stExpBtn" class="pill active" onclick="setStatType('Расход')">Расходы</button>
@@ -518,11 +743,19 @@
 
 <!-- Нижняя навигация -->
 <div class="bottom-nav">
-  <button id="navOps" class="nav-btn active" onclick="switchView('ops')">📋 Операции</button>
-  <button id="navStats" class="nav-btn" onclick="switchView('stats')">📊 Статистика</button>
+  <button id="navOps" class="nav-btn active" onclick="switchView('ops')">
+    <span class="ico">📋</span><span>Операции</span>
+  </button>
+  <button id="navRem" class="nav-btn" onclick="switchView('reminders')">
+    <span class="ico">🔔</span><span>Обязательные</span>
+    <span id="remDueBadge" class="nav-dot">0</span>
+  </button>
+  <button id="navStats" class="nav-btn" onclick="switchView('stats')">
+    <span class="ico">📊</span><span>Статистика</span>
+  </button>
 </div>
 
-<!-- Модальное окно добавления -->
+<!-- Модальное окно: Добавление / Редактирование операции -->
 <div id="modalBackdrop" class="modal-backdrop" onclick="if(event.target===this) closeModal()">
   <div class="modal">
     <div class="modal-head">
@@ -530,7 +763,13 @@
       <button class="close-btn" onclick="closeModal()">✕</button>
     </div>
 
-    <!-- Переключатель режима для Перевода / Обмена -->
+    <div id="opTypeSwitchBox" style="display:none; margin-bottom:10px;">
+      <div class="pill-group">
+        <button id="modeExpBtn" class="pill" onclick="setBasicType('Расход')">Расход</button>
+        <button id="modeIncBtn" class="pill" onclick="setBasicType('Доход')">Доход</button>
+      </div>
+    </div>
+
     <div id="trfModeBox" style="display:none; margin-bottom:10px;">
       <div class="pill-group">
         <button id="modeTrfBtn" class="pill active" onclick="setTransferMode('Перевод')">Между счетами</button>
@@ -547,6 +786,9 @@
       </div>
     </div>
 
+    <label class="field-label">Дата</label>
+    <input id="opDate" type="date">
+
     <label class="field-label" id="accLabel">Счёт</label>
     <select id="opAccount">
       <option value="Основной">Основной</option>
@@ -554,7 +796,6 @@
       <option value="Подарочные">Подарочные</option>
     </select>
 
-    <!-- Поля назначения (только для Перевода / Обмена) -->
     <div id="toAccountBox" style="display:none;">
       <label class="field-label">На счёт</label>
       <select id="opToAccount">
@@ -569,7 +810,6 @@
       <input id="opToAmount" type="number" inputmode="decimal" step="0.01" placeholder="Авто по курсу">
     </div>
 
-    <!-- Категории -->
     <div id="categoryBox">
       <label class="field-label">Категория</label>
       <div id="catGrid" class="cat-grid"></div>
@@ -582,11 +822,113 @@
   </div>
 </div>
 
-<script>
-  // ==================== ВСТАВЬ СЮДА ССЫЛКУ APPS SCRIPT ====================
-  const API_URL = 'https://script.google.com/macros/s/AKfycbyI0jUwIlFw1ElNp9AuikeZtXYsVqXyLvWY1XZh_R-G6ES3SOd0NvXCjyga8wOPqiDXeA/exec';
-  // ========================================================================
+<!-- Модальное окно: Обязательная трата -->
+<div id="remModalBackdrop" class="modal-backdrop" onclick="if(event.target===this) closeRemModal()">
+  <div class="modal">
+    <div class="modal-head">
+      <div id="remModalTitle" class="modal-title">Обязательная трата</div>
+      <button class="close-btn" onclick="closeRemModal()">✕</button>
+    </div>
 
+    <label class="field-label">О чём напоминать</label>
+    <input id="remTitle" type="text" placeholder="Например: Оплата коммунальных / Зимние сапоги">
+
+    <label class="field-label">С какой даты начать напоминать (раз в день)</label>
+    <input id="remDate" type="date">
+
+    <label class="field-label">Повтор</label>
+    <select id="remRepeat">
+      <option value="Разово">Разово (покупка, подарок)</option>
+      <option value="Ежемесячно">Ежемесячно (коммуналка, связь)</option>
+      <option value="Ежегодно">Ежегодно (день рождения, страховка)</option>
+    </select>
+
+    <label class="field-label">Категория расхода</label>
+    <select id="remCategory"></select>
+
+    <label class="check-row">
+      <input id="remAutoClose" type="checkbox">
+      <span>Закрывать напоминание автоматически, как только запишем расход в эту категорию (удобно для «Коммуналки»)</span>
+    </label>
+
+    <label class="field-label">Ориентировочная сумма (необязательно)</label>
+    <div class="input-row">
+      <input id="remAmount" type="number" inputmode="decimal" step="0.01" placeholder="Можно оставить пустым">
+      <div class="curr-switch">
+        <button id="rcByn" class="curr-opt active" onclick="setRemCurrency('BYN')">BYN</button>
+        <button id="rcUsd" class="curr-opt" onclick="setRemCurrency('USD')">$</button>
+      </div>
+    </div>
+
+    <label class="field-label">Кому присылать напоминание в Telegram</label>
+    <select id="remRecipient">
+      <option value="Обоим">Обоим (Саша и Алина)</option>
+    </select>
+
+    <button id="saveRemBtn" class="save-btn" onclick="submitReminder()">Создать напоминание</button>
+  </div>
+</div>
+
+<!-- Модальное окно: Цель в Копилке -->
+<div id="goalModalBackdrop" class="modal-backdrop" onclick="if(event.target===this) closeGoalModal()">
+  <div class="modal">
+    <div class="modal-head">
+      <div id="goalModalTitle" class="modal-title">Новая цель</div>
+      <button class="close-btn" onclick="closeGoalModal()">✕</button>
+    </div>
+
+    <label class="field-label">Название цели</label>
+    <input id="goalTitle" type="text" placeholder="Например: Отпуск / Подушка безопасности">
+
+    <label class="field-label">Целевая сумма</label>
+    <div class="input-row">
+      <input id="goalTarget" type="number" inputmode="decimal" step="0.01" placeholder="1000">
+      <div class="curr-switch">
+        <button id="gcByn" class="curr-opt active" onclick="setGoalCurrency('BYN')">BYN</button>
+        <button id="gcUsd" class="curr-opt" onclick="setGoalCurrency('USD')">$</button>
+      </div>
+    </div>
+
+    <label class="check-row">
+      <input id="goalUsePiggy" type="checkbox" onchange="toggleGoalSavedField()">
+      <span>Считать прогресс автоматически по всему балансу Копилки (BYN + $ по курсу)</span>
+    </label>
+
+    <div id="goalSavedWrap">
+      <label class="field-label">Уже отложено на эту цель</label>
+      <input id="goalSaved" type="number" inputmode="decimal" step="0.01" placeholder="0">
+    </div>
+
+    <button id="saveGoalBtn" class="save-btn" onclick="submitGoal()">Сохранить цель</button>
+  </div>
+</div>
+
+<!-- Модальное окно: Пополнить цель -->
+<div id="topUpModalBackdrop" class="modal-backdrop" onclick="if(event.target===this) closeTopUpModal()">
+  <div class="modal">
+    <div class="modal-head">
+      <div id="topUpTitle" class="modal-title">Пополнить цель</div>
+      <button class="close-btn" onclick="closeTopUpModal()">✕</button>
+    </div>
+
+    <label class="field-label">Сколько добавить (<span id="topUpCurr">BYN</span>)</label>
+    <input id="topUpAmount" type="number" inputmode="decimal" step="0.01" placeholder="100">
+
+    <label class="check-row">
+      <input id="topUpDeposit" type="checkbox">
+      <span>Также записать эту сумму как новый доход в Копилку (сними галочку, если деньги уже лежат в Копилке)</span>
+    </label>
+
+    <button id="saveTopUpBtn" class="save-btn" onclick="submitTopUp()">Добавить к цели</button>
+  </div>
+</div>
+
+<script>
+  // ==================== ВСТАВЬ СЮДА СВОЮ ССЫЛКУ APPS SCRIPT ====================
+  const API_URL = 'ВСТАВЬ_СЮДА_ССЫЛКУ_APPS_SCRIPT';
+  // =============================================================================
+
+  const CACHE_KEY = 'family_fin_cache_v2';
   const tg = window.Telegram.WebApp;
   tg.ready();
   tg.expand();
@@ -600,22 +942,27 @@
       'Подарочные': { BYN: 0, USD: 0 }
     },
     operations: [],
+    reminders: [],
+    goals: [],
     categories: { Доход: [], Расход: [] },
     rate: { value: 3.30, source: '—', updated: '' },
     activeAccount: 'Основной',
-    summaryCurrency: 'BYN', // BYN или USD
+    summaryCurrency: 'BYN',
     authorFilter: 'Все',
     onlyCurrentAccount: true,
+    searchQuery: '',
+    remFilter: 'Активно',
     view: 'ops',
     statType: 'Расход',
     statMonth: new Date()
   };
 
-  let modalState = {
-    type: 'Расход',
-    currency: 'BYN',
-    category: ''
-  };
+  let modalState = { editId: null, type: 'Расход', currency: 'BYN', category: '' };
+  let editingRemId = null;
+  let remCurrency = 'BYN';
+  let editingGoalId = null;
+  let goalCurrency = 'BYN';
+  let topUpGoalId = null;
 
   function esc(str) {
     return String(str || '').replace(/[&<>"']/g, m => ({
@@ -627,11 +974,61 @@
     return Number(num || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
   }
 
+  function localTodayIso() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+
+  function confirmAction(msg, onYes) {
+    if (tg && typeof tg.showConfirm === 'function') {
+      tg.showConfirm(msg, ok => { if (ok) onYes(); });
+    } else if (confirm(msg)) {
+      onYes();
+    }
+  }
+
   function showToast(msg) {
     const el = document.getElementById('toast');
     el.textContent = msg;
     el.style.display = 'block';
-    setTimeout(() => { el.style.display = 'none'; }, 2400);
+    setTimeout(() => { el.style.display = 'none'; }, 2600);
+  }
+
+  function saveCache() {
+    try {
+      localStorage.setItem(CACHE_KEY, JSON.stringify({
+        user: state.user,
+        users: state.users,
+        balances: state.balances,
+        operations: state.operations,
+        reminders: state.reminders,
+        goals: state.goals,
+        categories: state.categories,
+        rate: state.rate,
+        summaryCurrency: state.summaryCurrency
+      }));
+    } catch (e) {}
+  }
+
+  function loadCache() {
+    try {
+      const raw = localStorage.getItem(CACHE_KEY);
+      if (!raw) return false;
+      const c = JSON.parse(raw);
+      if (!c || !c.balances) return false;
+      state.user = c.user || '';
+      state.users = c.users || ['Саша', 'Алина'];
+      state.balances = c.balances;
+      state.operations = c.operations || [];
+      state.reminders = c.reminders || [];
+      state.goals = c.goals || [];
+      state.categories = c.categories || { Доход: [], Расход: [] };
+      state.rate = c.rate || state.rate;
+      if (c.summaryCurrency) state.summaryCurrency = c.summaryCurrency;
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   async function apiCall(payload) {
@@ -644,6 +1041,8 @@
   }
 
   async function loadData(forceRate = false) {
+    const syncTag = document.getElementById('syncTag');
+    syncTag.style.display = 'inline';
     try {
       const data = await apiCall({ appAction: 'getData', forceRate });
       if (!data.ok) {
@@ -654,17 +1053,27 @@
       state.users = data.users;
       state.balances = data.balances;
       state.operations = data.operations;
+      state.reminders = data.reminders || [];
+      state.goals = data.goals || [];
       state.categories = data.categories;
       state.rate = data.rate;
+      saveCache();
       renderAll();
       if (forceRate) showToast('Курс обновлён');
     } catch (e) {
-      document.getElementById('opsList').innerHTML = '<div class="empty">Ошибка связи с Google Таблицей. Проверьте API_URL.</div>';
+      if (!state.operations.length) {
+        document.getElementById('opsList').innerHTML = '<div class="empty">Ошибка связи с Google Таблицей. Проверьте API_URL.</div>';
+      } else {
+        showToast('Нет связи, показаны сохранённые данные');
+      }
+    } finally {
+      syncTag.style.display = 'none';
     }
   }
 
   function toggleSummaryCurrency() {
     state.summaryCurrency = state.summaryCurrency === 'BYN' ? 'USD' : 'BYN';
+    saveCache();
     if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
     renderHeaderAndAccount();
     if (state.view === 'stats') renderStats();
@@ -677,6 +1086,7 @@
     });
     if (tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
     renderHeaderAndAccount();
+    renderGoals();
     renderOperations();
   }
 
@@ -692,20 +1102,39 @@
     renderStats();
   }
 
+  function onSearchInput() {
+    const val = document.getElementById('searchInput').value;
+    state.searchQuery = val.trim().toLowerCase();
+    document.getElementById('searchClear').style.display = val ? 'block' : 'none';
+    renderOperations();
+  }
+
+  function clearSearch() {
+    document.getElementById('searchInput').value = '';
+    state.searchQuery = '';
+    document.getElementById('searchClear').style.display = 'none';
+    renderOperations();
+  }
+
   function switchView(v) {
     state.view = v;
     document.getElementById('viewOps').style.display = v === 'ops' ? 'block' : 'none';
+    document.getElementById('viewReminders').style.display = v === 'reminders' ? 'block' : 'none';
     document.getElementById('viewStats').style.display = v === 'stats' ? 'block' : 'none';
     document.getElementById('navOps').classList.toggle('active', v === 'ops');
+    document.getElementById('navRem').classList.toggle('active', v === 'reminders');
     document.getElementById('navStats').classList.toggle('active', v === 'stats');
+    if (v === 'reminders') renderReminders();
     if (v === 'stats') renderStats();
   }
 
   function renderAll() {
     document.getElementById('userBadge').textContent = state.user || 'Вы';
     renderHeaderAndAccount();
+    renderGoals();
     renderAuthorPills();
     renderOperations();
+    renderReminders();
     if (state.view === 'stats') renderStats();
   }
 
@@ -743,18 +1172,41 @@
 
   function renderOperations() {
     const scopeBtn = document.getElementById('scopeBtn');
-    scopeBtn.textContent = state.onlyCurrentAccount ? `Счёт: ${state.activeAccount}` : 'Все счета';
-    scopeBtn.classList.toggle('active', state.onlyCurrentAccount);
+    const q = state.searchQuery;
+    scopeBtn.textContent = (state.onlyCurrentAccount && !q) ? `Счёт: ${state.activeAccount}` : 'Все счета';
+    scopeBtn.classList.toggle('active', state.onlyCurrentAccount && !q);
 
     const filtered = state.operations.filter(op => {
       if (state.authorFilter !== 'Все' && op.author !== state.authorFilter) return false;
-      if (state.onlyCurrentAccount && op.account !== state.activeAccount && op.toAccount !== state.activeAccount) return false;
+      if (!q && state.onlyCurrentAccount && op.account !== state.activeAccount && op.toAccount !== state.activeAccount) return false;
+      if (q) {
+        const hay = `${op.category} ${op.comment} ${op.account} ${op.toAccount} ${op.author} ${op.amount}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
       return true;
     });
 
+    const sumBox = document.getElementById('searchSummary');
+    if (q) {
+      const rate = state.rate.value || 3.30;
+      let incByn = 0, expByn = 0;
+      filtered.forEach(op => {
+        const v = op.currency === 'USD' ? op.amount * rate : op.amount;
+        if (op.type === 'Доход') incByn += v;
+        if (op.type === 'Расход') expByn += v;
+      });
+      const isUsd = state.summaryCurrency === 'USD';
+      const c = isUsd ? '$' : 'BYN';
+      const div = isUsd ? rate : 1;
+      sumBox.style.display = 'block';
+      sumBox.innerHTML = `Найдено: <b>${filtered.length}</b> · Расходы: <b>${fmt(expByn / div)} ${c}</b> · Доходы: <b>${fmt(incByn / div)} ${c}</b>`;
+    } else {
+      sumBox.style.display = 'none';
+    }
+
     const container = document.getElementById('opsList');
     if (!filtered.length) {
-      container.innerHTML = '<div class="empty">Операций пока нет</div>';
+      container.innerHTML = `<div class="empty">${q ? 'По вашему запросу ничего не найдено' : 'Операций пока нет'}</div>`;
       return;
     }
 
@@ -798,7 +1250,8 @@
           </div>
           <div class="op-right">
             ${sumHtml}
-            <button class="del-btn" onclick="deleteOp('${esc(op.id)}')" title="Удалить">🗑</button>
+            <button class="op-act-btn" onclick="openEditOpModal('${esc(op.id)}')" title="Изменить">✏️</button>
+            <button class="op-act-btn" onclick="deleteOp('${esc(op.id)}')" title="Удалить">🗑</button>
           </div>
         </div>
       `;
@@ -808,10 +1261,412 @@
   }
 
   function formatDayLabel(isoDay) {
-    const parts = isoDay.split('-');
+    const parts = String(isoDay || '').split('-');
     if (parts.length !== 3) return isoDay;
     const months = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
     return `${parseInt(parts[2], 10)} ${months[parseInt(parts[1], 10) - 1]} ${parts[0]}`;
+  }
+
+  // --- ЦЕЛИ В КОПИЛКЕ ---
+  function renderGoals() {
+    const box = document.getElementById('goalsBox');
+    if (state.activeAccount !== 'Копилка') {
+      box.style.display = 'none';
+      return;
+    }
+    box.style.display = 'block';
+
+    const list = state.goals || [];
+    const container = document.getElementById('goalsList');
+    if (!list.length) {
+      container.innerHTML = '<div style="font-size:12px; color:var(--hint); padding:4px 2px;">Целей пока нет — нажмите «+ Цель», чтобы задать ориентир накоплений.</div>';
+      return;
+    }
+
+    const piggy = state.balances['Копилка'] || { BYN: 0, USD: 0 };
+    const rate = state.rate.value || 3.30;
+
+    container.innerHTML = list.map(g => {
+      const curr = g.currency === 'USD' ? '$' : 'BYN';
+      const current = g.usePiggy
+        ? (g.currency === 'USD' ? piggy.USD + piggy.BYN / rate : piggy.BYN + piggy.USD * rate)
+        : (g.saved || 0);
+      const pct = g.target > 0 ? Math.max(0, Math.min(100, Math.round((current / g.target) * 100))) : 0;
+      const left = Math.max(0, g.target - current);
+
+      return `
+        <div class="goal-card">
+          <div class="goal-top">
+            <div class="goal-title">${esc(g.title)} ${g.usePiggy ? '🔗' : ''}</div>
+            <div class="goal-actions">
+              ${!g.usePiggy ? `<button class="icon-btn green" onclick="openTopUpModal('${esc(g.id)}')">+</button>` : ''}
+              <button class="icon-btn" onclick="openGoalModal('${esc(g.id)}')">✏️</button>
+              <button class="icon-btn red" onclick="deleteGoal('${esc(g.id)}')">🗑</button>
+            </div>
+          </div>
+          <div class="goal-nums">
+            <span>${fmt(current)} / ${fmt(g.target)} ${curr} (<b>${pct}%</b>)</span>
+            <span>${left > 0 ? 'Осталось ' + fmt(left) + ' ' + curr : '🎉 Выполнена!'}</span>
+          </div>
+          <div class="goal-bar-bg"><div class="goal-bar-fill" style="width:${pct}%"></div></div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function openGoalModal(editId = null) {
+    editingGoalId = editId;
+    const titleEl = document.getElementById('goalModalTitle');
+    const btnEl = document.getElementById('saveGoalBtn');
+
+    if (editId) {
+      const g = state.goals.find(x => x.id === editId);
+      if (!g) return;
+      titleEl.textContent = 'Изменить цель';
+      btnEl.textContent = 'Сохранить изменения';
+      document.getElementById('goalTitle').value = g.title;
+      document.getElementById('goalTarget').value = g.target;
+      document.getElementById('goalSaved').value = g.saved || 0;
+      document.getElementById('goalUsePiggy').checked = Boolean(g.usePiggy);
+      setGoalCurrency(g.currency || 'BYN');
+    } else {
+      titleEl.textContent = 'Новая цель в Копилке';
+      btnEl.textContent = 'Создать цель';
+      document.getElementById('goalTitle').value = '';
+      document.getElementById('goalTarget').value = '';
+      document.getElementById('goalSaved').value = '0';
+      document.getElementById('goalUsePiggy').checked = false;
+      setGoalCurrency('BYN');
+    }
+    toggleGoalSavedField();
+    document.getElementById('goalModalBackdrop').classList.add('open');
+  }
+
+  function closeGoalModal() {
+    editingGoalId = null;
+    document.getElementById('goalModalBackdrop').classList.remove('open');
+  }
+
+  function setGoalCurrency(c) {
+    goalCurrency = c;
+    document.getElementById('gcByn').classList.toggle('active', c === 'BYN');
+    document.getElementById('gcUsd').classList.toggle('active', c === 'USD');
+  }
+
+  function toggleGoalSavedField() {
+    const auto = document.getElementById('goalUsePiggy').checked;
+    document.getElementById('goalSavedWrap').style.display = auto ? 'none' : 'block';
+  }
+
+  async function submitGoal() {
+    const title = document.getElementById('goalTitle').value.trim();
+    const target = parseFloat(document.getElementById('goalTarget').value);
+    if (!title) { showToast('Введите название цели'); return; }
+    if (!target || target <= 0) { showToast('Введите целевую сумму'); return; }
+
+    const isEdit = Boolean(editingGoalId);
+    const btn = document.getElementById('saveGoalBtn');
+    btn.disabled = true;
+    btn.textContent = 'Сохраняем...';
+
+    const goal = {
+      title,
+      target,
+      currency: goalCurrency,
+      usePiggy: document.getElementById('goalUsePiggy').checked,
+      saved: parseFloat(document.getElementById('goalSaved').value) || 0
+    };
+    if (isEdit) goal.id = editingGoalId;
+
+    try {
+      const res = await apiCall({ appAction: isEdit ? 'updateGoal' : 'addGoal', goal });
+      if (res.ok) {
+        state.goals = res.goals || [];
+        saveCache();
+        closeGoalModal();
+        renderGoals();
+        showToast(isEdit ? 'Цель обновлена' : 'Цель создана');
+      } else {
+        showToast(res.error || 'Ошибка');
+      }
+    } catch (e) {
+      showToast('Ошибка сети');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = isEdit ? 'Сохранить изменения' : 'Создать цель';
+    }
+  }
+
+  function openTopUpModal(id) {
+    const g = state.goals.find(x => x.id === id);
+    if (!g) return;
+    topUpGoalId = id;
+    document.getElementById('topUpTitle').textContent = `Пополнить: ${g.title}`;
+    document.getElementById('topUpCurr').textContent = g.currency === 'USD' ? '$' : 'BYN';
+    document.getElementById('topUpAmount').value = '';
+    document.getElementById('topUpDeposit').checked = false;
+    document.getElementById('topUpModalBackdrop').classList.add('open');
+    setTimeout(() => document.getElementById('topUpAmount').focus(), 100);
+  }
+
+  function closeTopUpModal() {
+    topUpGoalId = null;
+    document.getElementById('topUpModalBackdrop').classList.remove('open');
+  }
+
+  async function submitTopUp() {
+    const amount = parseFloat(document.getElementById('topUpAmount').value);
+    if (!amount || amount <= 0) { showToast('Введите сумму'); return; }
+
+    const btn = document.getElementById('saveTopUpBtn');
+    btn.disabled = true;
+    btn.textContent = 'Сохраняем...';
+
+    try {
+      const res = await apiCall({
+        appAction: 'topUpGoal',
+        id: topUpGoalId,
+        amount,
+        depositToPiggy: document.getElementById('topUpDeposit').checked
+      });
+      if (res.ok) {
+        state.goals = res.goals || [];
+        if (res.balances) state.balances = res.balances;
+        if (res.operations) state.operations = res.operations;
+        saveCache();
+        closeTopUpModal();
+        renderAll();
+        showToast('Прогресс цели обновлён');
+      }
+    } catch (e) {
+      showToast('Ошибка сети');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Добавить к цели';
+    }
+  }
+
+  function deleteGoal(id) {
+    confirmAction('Удалить эту цель?', async () => {
+      try {
+        const res = await apiCall({ appAction: 'deleteGoal', id });
+        if (res.ok) {
+          state.goals = res.goals || [];
+          saveCache();
+          renderGoals();
+          showToast('Цель удалена');
+        }
+      } catch (e) {
+        showToast('Не удалось удалить');
+      }
+    });
+  }
+
+  // --- ОБЯЗАТЕЛЬНЫЕ ТРАТЫ ---
+  function setRemFilter(status) {
+    state.remFilter = status;
+    document.getElementById('remFilterAct').classList.toggle('active', status === 'Активно');
+    document.getElementById('remFilterDone').classList.toggle('active', status === 'Выполнено');
+    renderReminders();
+  }
+
+  function renderReminders() {
+    const today = localTodayIso();
+    const dueCount = state.reminders.filter(r => r.status === 'Активно' && r.startDate <= today).length;
+    const badge = document.getElementById('remDueBadge');
+    badge.textContent = dueCount;
+    badge.style.display = dueCount > 0 ? 'inline-block' : 'none';
+
+    const list = state.reminders.filter(r => r.status === state.remFilter);
+    const container = document.getElementById('remList');
+    if (!list.length) {
+      container.innerHTML = state.remFilter === 'Активно'
+        ? '<div class="empty">Активных обязательных трат пока нет.<br>Нажмите кнопку выше, чтобы добавить коммуналку, покупку или подарок.</div>'
+        : '<div class="empty">Выполненных разовых трат пока нет</div>';
+      return;
+    }
+
+    container.innerHTML = list.map(r => {
+      const isDue = r.status === 'Активно' && r.startDate <= today;
+      const curr = r.currency === 'USD' ? '$' : 'BYN';
+      let badgeHtml = '';
+      if (r.status === 'Выполнено') {
+        badgeHtml = '<span class="rem-badge badge-done">✅ Выполнено</span>';
+      } else if (isDue) {
+        badgeHtml = '<span class="rem-badge badge-due">🔔 Напоминает</span>';
+      } else {
+        badgeHtml = `<span class="rem-badge badge-wait">⏳ С ${formatDayLabel(r.startDate)}</span>`;
+      }
+
+      const metaParts = [
+        `Дата: с ${formatDayLabel(r.startDate)}`,
+        r.repeat,
+        r.category ? `Категория: ${r.category}` : '',
+        r.amount > 0 ? `Сумма: ${fmt(r.amount)} ${curr}` : '',
+        `Кому: ${r.recipient}`,
+        r.autoClose ? '⚡ Автозакрытие' : ''
+      ].filter(Boolean).join(' · ');
+
+      const actionsHtml = r.status === 'Активно' ? `
+        <div class="rem-actions">
+          <button class="rem-btn-done" onclick="markRemDone('${esc(r.id)}','${esc(r.startDate)}',false)">✅ Оплачено</button>
+          ${r.amount > 0 ? `<button class="rem-btn-pay" onclick="markRemDone('${esc(r.id)}','${esc(r.startDate)}',true)">💸 В расходы (${fmt(r.amount)} ${curr})</button>` : ''}
+          <button class="rem-btn-edit" onclick="openRemModal('${esc(r.id)}')" title="Изменить">✏️</button>
+          <button class="rem-btn-del" onclick="deleteRem('${esc(r.id)}')" title="Удалить">🗑</button>
+        </div>
+      ` : `
+        <div class="rem-actions">
+          <button class="rem-btn-del" onclick="deleteRem('${esc(r.id)}')">🗑 Удалить из архива</button>
+        </div>
+      `;
+
+      return `
+        <div class="rem-card ${isDue ? 'due' : ''}">
+          <div class="rem-top">
+            <div class="rem-title">${esc(r.title)}</div>
+            ${badgeHtml}
+          </div>
+          <div class="rem-meta">${esc(metaParts)}</div>
+          ${actionsHtml}
+        </div>
+      `;
+    }).join('');
+  }
+
+  function openRemModal(editId = null) {
+    editingRemId = editId;
+
+    const expCats = state.categories['Расход'] || [];
+    const catSelect = document.getElementById('remCategory');
+    catSelect.innerHTML = '<option value="">Без категории</option>' +
+      expCats.map(c => `<option value="${esc(c.name)}">${esc(c.name)}</option>`).join('');
+
+    const recSelect = document.getElementById('remRecipient');
+    recSelect.innerHTML = '<option value="Обоим">Обоим (' + state.users.join(' и ') + ')</option>' +
+      state.users.map(u => `<option value="${esc(u)}">Только ${esc(u)}</option>`).join('');
+
+    const modalTitle = document.getElementById('remModalTitle');
+    const saveBtn = document.getElementById('saveRemBtn');
+
+    if (editId) {
+      const r = state.reminders.find(x => x.id === editId);
+      if (!r) return;
+      modalTitle.textContent = 'Изменить напоминание';
+      saveBtn.textContent = 'Сохранить изменения';
+      document.getElementById('remTitle').value = r.title;
+      document.getElementById('remDate').value = r.startDate;
+      document.getElementById('remRepeat').value = r.repeat || 'Разово';
+      catSelect.value = r.category || '';
+      document.getElementById('remAutoClose').checked = Boolean(r.autoClose);
+      document.getElementById('remAmount').value = r.amount > 0 ? r.amount : '';
+      setRemCurrency(r.currency || 'BYN');
+      recSelect.value = r.recipient || 'Обоим';
+    } else {
+      modalTitle.textContent = 'Обязательная трата';
+      saveBtn.textContent = 'Создать напоминание';
+      document.getElementById('remTitle').value = '';
+      document.getElementById('remDate').value = localTodayIso();
+      document.getElementById('remRepeat').value = 'Разово';
+      catSelect.value = '';
+      document.getElementById('remAutoClose').checked = false;
+      document.getElementById('remAmount').value = '';
+      setRemCurrency('BYN');
+      recSelect.value = 'Обоим';
+    }
+
+    document.getElementById('remModalBackdrop').classList.add('open');
+  }
+
+  function closeRemModal() {
+    editingRemId = null;
+    document.getElementById('remModalBackdrop').classList.remove('open');
+  }
+
+  function setRemCurrency(c) {
+    remCurrency = c;
+    document.getElementById('rcByn').classList.toggle('active', c === 'BYN');
+    document.getElementById('rcUsd').classList.toggle('active', c === 'USD');
+  }
+
+  async function submitReminder() {
+    const title = document.getElementById('remTitle').value.trim();
+    const startDate = document.getElementById('remDate').value;
+    if (!title) { showToast('Введите название напоминания'); return; }
+    if (!startDate) { showToast('Выберите дату начала'); return; }
+
+    const isEdit = Boolean(editingRemId);
+    const btn = document.getElementById('saveRemBtn');
+    btn.disabled = true;
+    btn.textContent = 'Сохраняем...';
+
+    const payload = {
+      title, startDate,
+      repeat: document.getElementById('remRepeat').value,
+      category: document.getElementById('remCategory').value,
+      autoClose: document.getElementById('remAutoClose').checked,
+      amount: parseFloat(document.getElementById('remAmount').value) || 0,
+      currency: remCurrency,
+      recipient: document.getElementById('remRecipient').value
+    };
+    if (isEdit) payload.id = editingRemId;
+
+    try {
+      const res = await apiCall({ appAction: isEdit ? 'updateReminder' : 'addReminder', reminder: payload });
+      if (res.ok) {
+        state.reminders = res.reminders || [];
+        saveCache();
+        closeRemModal();
+        renderReminders();
+        if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+        showToast(isEdit ? 'Изменения сохранены' : 'Напоминание создано');
+      } else {
+        showToast(res.error || 'Ошибка');
+      }
+    } catch (e) {
+      showToast('Ошибка сети');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = isEdit ? 'Сохранить изменения' : 'Создать напоминание';
+    }
+  }
+
+  function markRemDone(id, expectedDate, logExpense) {
+    const prompt = logExpense
+      ? 'Отметить оплаченным и сразу записать расход на Основной счёт?'
+      : 'Отметить эту обязательную трату выполненной?';
+
+    confirmAction(prompt, async () => {
+      try {
+        const res = await apiCall({ appAction: 'completeReminder', id, expectedDate, logExpense });
+        if (res.ok) {
+          state.reminders = res.reminders || [];
+          if (res.balances) state.balances = res.balances;
+          if (res.operations) state.operations = res.operations;
+          saveCache();
+          renderAll();
+          if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+          showToast(logExpense ? 'Оплачено и записано в расходы' : 'Отмечено выполненным');
+        }
+      } catch (e) {
+        showToast('Ошибка связи');
+      }
+    });
+  }
+
+  function deleteRem(id) {
+    confirmAction('Удалить это напоминание?', async () => {
+      try {
+        const res = await apiCall({ appAction: 'deleteReminder', id });
+        if (res.ok) {
+          state.reminders = res.reminders || [];
+          saveCache();
+          renderReminders();
+          showToast('Напоминание удалено');
+        }
+      } catch (e) {
+        showToast('Не удалось удалить');
+      }
+    });
   }
 
   // --- СТАТИСТИКА ---
@@ -837,19 +1692,42 @@
     const rate = state.rate.value || 3.30;
     const isUsd = state.summaryCurrency === 'USD';
     const currLabel = isUsd ? '$' : 'BYN';
+    const div = isUsd ? rate : 1;
 
+    let monthIncByn = 0;
+    let monthExpByn = 0;
     const byCat = {};
-    let totalByn = 0;
+    let selectedTotalByn = 0;
 
     state.operations.forEach(op => {
-      if (op.type !== state.statType) return;
       if (!op.date.startsWith(prefix)) return;
       if (state.authorFilter !== 'Все' && op.author !== state.authorFilter) return;
 
       const valByn = op.currency === 'USD' ? op.amount * rate : op.amount;
-      byCat[op.category] = (byCat[op.category] || 0) + valByn;
-      totalByn += valByn;
+      if (op.type === 'Доход') monthIncByn += valByn;
+      if (op.type === 'Расход') monthExpByn += valByn;
+
+      if (op.type === state.statType) {
+        byCat[op.category] = (byCat[op.category] || 0) + valByn;
+        selectedTotalByn += valByn;
+      }
     });
+
+    const netByn = monthIncByn - monthExpByn;
+    document.getElementById('statKpis').innerHTML = `
+      <div class="kpi-card">
+        <div class="kpi-label">Доходы</div>
+        <div class="kpi-val sum-inc">+${fmt(monthIncByn / div)} ${currLabel}</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Расходы</div>
+        <div class="kpi-val sum-exp">−${fmt(monthExpByn / div)} ${currLabel}</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Итог</div>
+        <div class="kpi-val" style="color:${netByn >= 0 ? 'var(--green)' : 'var(--red)'};">${netByn >= 0 ? '+' : ''}${fmt(netByn / div)} ${currLabel}</div>
+      </div>
+    `;
 
     const container = document.getElementById('statsList');
     const entries = Object.entries(byCat).sort((a, b) => b[1] - a[1]);
@@ -859,17 +1737,14 @@
       return;
     }
 
-    const totalShown = isUsd ? totalByn / rate : totalByn;
-    let html = `<div style="margin-bottom:10px; font-size:14px; color:var(--hint);">Всего (${state.statType.toLowerCase()}): <strong style="color:var(--text);">${fmt(totalShown)} ${currLabel}</strong></div>`;
-
+    let html = '';
     entries.forEach(([cat, valByn]) => {
-      const pct = Math.round((valByn / totalByn) * 100);
-      const shown = isUsd ? valByn / rate : valByn;
+      const pct = Math.round((valByn / selectedTotalByn) * 100);
       html += `
         <div class="stat-row">
           <div class="stat-top">
             <span>${esc(cat)} (${pct}%)</span>
-            <span>${fmt(shown)} ${currLabel}</span>
+            <span>${fmt(valByn / div)} ${currLabel}</span>
           </div>
           <div class="bar-bg"><div class="bar-fill" style="width:${pct}%"></div></div>
         </div>
@@ -879,18 +1754,22 @@
     container.innerHTML = html;
   }
 
-  // --- МОДАЛЬНОЕ ОКНО ДОБАВЛЕНИЯ ---
+  // --- МОДАЛЬНОЕ ОКНО ОПЕРАЦИЙ (СОЗДАНИЕ + РЕДАКТИРОВАНИЕ) ---
   function openModal(type) {
+    modalState.editId = null;
     modalState.type = type;
     modalState.currency = 'BYN';
+    modalState.category = '';
+
     document.getElementById('opAmount').value = '';
     document.getElementById('opToAmount').value = '';
     document.getElementById('opComment').value = '';
+    document.getElementById('opDate').value = localTodayIso();
     document.getElementById('opAccount').value = state.activeAccount;
 
-    // Для перевода подбираем другой счёт по умолчанию
     const otherAcc = state.activeAccount === 'Копилка' ? 'Основной' : 'Копилка';
     document.getElementById('opToAccount').value = otherAcc;
+    document.getElementById('saveBtn').textContent = 'Сохранить';
 
     setOpCurrency('BYN');
     updateModalLayout();
@@ -898,8 +1777,37 @@
     setTimeout(() => document.getElementById('opAmount').focus(), 100);
   }
 
+  function openEditOpModal(id) {
+    const op = state.operations.find(x => x.id === id);
+    if (!op) return;
+
+    modalState.editId = id;
+    modalState.type = op.type;
+    modalState.currency = op.currency || 'BYN';
+    modalState.category = op.category || '';
+
+    document.getElementById('opAmount').value = op.amount;
+    document.getElementById('opToAmount').value = op.toAmount || '';
+    document.getElementById('opComment').value = op.comment || '';
+    document.getElementById('opDate').value = op.date.slice(0, 10);
+    document.getElementById('opAccount').value = op.account;
+    if (op.toAccount) document.getElementById('opToAccount').value = op.toAccount;
+    document.getElementById('saveBtn').textContent = 'Сохранить изменения';
+
+    setOpCurrency(modalState.currency);
+    updateModalLayout(true);
+    document.getElementById('modalBackdrop').classList.add('open');
+  }
+
   function closeModal() {
+    modalState.editId = null;
     document.getElementById('modalBackdrop').classList.remove('open');
+  }
+
+  function setBasicType(t) {
+    modalState.type = t;
+    modalState.category = '';
+    updateModalLayout();
   }
 
   function setTransferMode(mode) {
@@ -912,7 +1820,7 @@
     document.getElementById('cByn').classList.toggle('active', c === 'BYN');
     document.getElementById('cUsd').classList.toggle('active', c === 'USD');
     document.getElementById('toCurrLabel').textContent = c === 'BYN' ? '$' : 'BYN';
-    autoCalcExchange();
+    if (!modalState.editId) autoCalcExchange();
   }
 
   function autoCalcExchange() {
@@ -927,14 +1835,18 @@
     document.getElementById('opToAmount').value = converted.toFixed(2);
   }
 
-  function updateModalLayout() {
+  function updateModalLayout(keepCategory = false) {
     const t = modalState.type;
     const isTrfOrExch = t === 'Перевод' || t === 'Обмен';
+    const isEdit = Boolean(modalState.editId);
 
-    document.getElementById('modalTitle').textContent =
-      t === 'Расход' ? 'Новый расход' :
-      t === 'Доход' ? 'Новый доход' :
-      t === 'Перевод' ? 'Перевод между счетами' : 'Обмен валют';
+    document.getElementById('modalTitle').textContent = isEdit
+      ? 'Изменить операцию'
+      : (t === 'Расход' ? 'Новый расход' : t === 'Доход' ? 'Новый доход' : t === 'Перевод' ? 'Перевод между счетами' : 'Обмен валют');
+
+    document.getElementById('opTypeSwitchBox').style.display = (isEdit && !isTrfOrExch) ? 'block' : 'none';
+    document.getElementById('modeExpBtn').classList.toggle('active', t === 'Расход');
+    document.getElementById('modeIncBtn').classList.toggle('active', t === 'Доход');
 
     document.getElementById('trfModeBox').style.display = isTrfOrExch ? 'block' : 'none';
     document.getElementById('modeTrfBtn').classList.toggle('active', t === 'Перевод');
@@ -948,7 +1860,9 @@
 
     if (!isTrfOrExch) {
       const list = state.categories[t] || [];
-      modalState.category = list.length ? list[0].name : 'Прочее';
+      if (!keepCategory || !list.some(c => c.name === modalState.category)) {
+        modalState.category = list.length ? list[0].name : 'Прочее';
+      }
       renderCategoryChips(list);
     }
   }
@@ -968,56 +1882,53 @@
 
   async function submitOperation() {
     const amount = parseFloat(document.getElementById('opAmount').value);
-    if (!amount || amount <= 0) {
-      showToast('Введите сумму');
-      return;
-    }
+    if (!amount || amount <= 0) { showToast('Введите сумму'); return; }
 
     const account = document.getElementById('opAccount').value;
     const comment = document.getElementById('opComment').value.trim();
+    const date = document.getElementById('opDate').value || localTodayIso();
 
     const op = {
-      type: modalState.type,
-      account,
-      currency: modalState.currency,
-      amount,
-      category: modalState.category,
-      comment
+      type: modalState.type, account, currency: modalState.currency,
+      amount, category: modalState.category, comment, date
     };
 
     if (modalState.type === 'Перевод') {
       const toAccount = document.getElementById('opToAccount').value;
-      if (toAccount === account) {
-        showToast('Выберите разные счета для перевода');
-        return;
-      }
+      if (toAccount === account) { showToast('Выберите разные счета для перевода'); return; }
       op.toAccount = toAccount;
       op.toAmount = amount;
       op.toCurrency = modalState.currency;
     } else if (modalState.type === 'Обмен') {
       const toAmount = parseFloat(document.getElementById('opToAmount').value);
-      if (!toAmount || toAmount <= 0) {
-        showToast('Укажите сумму получения');
-        return;
-      }
+      if (!toAmount || toAmount <= 0) { showToast('Укажите сумму получения'); return; }
       op.toAccount = account;
       op.toAmount = toAmount;
       op.toCurrency = modalState.currency === 'BYN' ? 'USD' : 'BYN';
     }
+
+    const isEdit = Boolean(modalState.editId);
+    if (isEdit) op.id = modalState.editId;
 
     const btn = document.getElementById('saveBtn');
     btn.disabled = true;
     btn.textContent = 'Сохраняем...';
 
     try {
-      const res = await apiCall({ appAction: 'addOp', op });
+      const res = await apiCall({ appAction: isEdit ? 'updateOp' : 'addOp', op });
       if (res.ok) {
         state.balances = res.balances;
         state.operations = res.operations;
+        if (res.reminders) state.reminders = res.reminders;
+        saveCache();
         closeModal();
         renderAll();
         if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-        showToast('Сохранено');
+        if (res.closedReminders && res.closedReminders.length) {
+          showToast('Сохранено + закрыто напоминание!');
+        } else {
+          showToast(isEdit ? 'Операция обновлена' : 'Сохранено');
+        }
       } else {
         showToast(res.error || 'Ошибка сохранения');
       }
@@ -1025,25 +1936,30 @@
       showToast('Ошибка сети');
     } finally {
       btn.disabled = false;
-      btn.textContent = 'Сохранить';
+      btn.textContent = isEdit ? 'Сохранить изменения' : 'Сохранить';
     }
   }
 
-  async function deleteOp(id) {
-    if (!confirm('Удалить эту операцию?')) return;
-    try {
-      const res = await apiCall({ appAction: 'deleteOp', id });
-      if (res.ok) {
-        state.balances = res.balances;
-        state.operations = res.operations;
-        renderAll();
-        showToast('Удалено');
+  function deleteOp(id) {
+    confirmAction('Удалить эту операцию?', async () => {
+      try {
+        const res = await apiCall({ appAction: 'deleteOp', id });
+        if (res.ok) {
+          state.balances = res.balances;
+          state.operations = res.operations;
+          saveCache();
+          renderAll();
+          showToast('Удалено');
+        }
+      } catch (e) {
+        showToast('Не удалось удалить');
       }
-    } catch (e) {
-      showToast('Не удалось удалить');
-    }
+    });
   }
 
+  if (loadCache()) {
+    renderAll();
+  }
   loadData();
 </script>
 </body>
